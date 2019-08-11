@@ -1,4 +1,4 @@
-﻿# Script that picks up to ten random movies and place them in a separate folder
+# Script that picks up to ten random movies and place them in a separate folder
 ## I use this script to pick movies in my external hard drive
 ## So as a param it requires the letter the system assigned to that external hard drive, and it to contain de routes 'Peliculas' and 'Peliculas\00 THE NEW'
 ## or a string with route to a folder (the new folder to place the movies will be created there, take that on count)
@@ -34,15 +34,16 @@ if( (ls "${main_dir}:\Peliculas").Length -lt 1){
     return -1
 }
 
-$movies_in_new = ls "${letter}:\Peliculas\00 THE NEW" -Name
-# $movies_random = ls "${letter}:\THE LIST" -Name -Exclude '00 THE NEW', *.txt, *.jpg, *.srt, *.ssa
+$movies_in_new = ls "${main_dir}:\Peliculas\00 THE NEW" -Name
+# $movies_random = ls "${main_dir}:\THE LIST" -Name -Exclude '00 THE NEW', *.txt, *.jpg, *.srt, *.ssa
 
 while($movies_number -lt $max_movies){
+    echo "Copying movies..."
     $some_movie = $movies_in_new[(Get-Random -Maximum ($movies_in_new.Length - 1) -Minimum 0)]
-    if( -not(Test-Path "${letter}:\THE LIST\$some_movie" -PathType Container) ) {
+    if( -not(Test-Path "${main_dir}:\THE LIST\$some_movie" -PathType Container) ) {
         echo "Missing ${movies_to_add_number}..."
-        cp "${letter}:\Peliculas\00 THE NEW\$some_movie\" "${letter}:\THE LIST" -Recurse
-        $movies_number = (ls "${letter}:\THE LIST").Length
+        cp "${main_dir}:\Peliculas\00 THE NEW\$some_movie\" "${main_dir}:\THE LIST" -Recurse
+        $movies_number = (ls "${main_dir}:\THE LIST").Length
         $movies_to_add_number = $max_movies - $movies_number        
     }
 }
